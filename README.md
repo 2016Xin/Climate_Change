@@ -7,8 +7,10 @@ The Earth Surface Temperature Data sourced from Kaggle website.There are five .c
 The global annually average temperature changing over years was calculated and displayed in Figure 1. We can see clearly that the average temperature has been increasing significantly since early 18th centry. The growth rate of temperature is getting higher in the latest decades, indicated by the lope of the curve. The maximum, minimum and average temperatures of each 20-year-interval were calculated using HiveQL queries (Figure 2).  The global maximum temperature of each time period didn’t show much change since 1800, while the global minimum temperature exhibits significant arising, especially in the time period of 1800 ~1920. The global average temperature arises about 4 degC since 1800. 
 
    ![figure1](https://user-images.githubusercontent.com/19471954/27813450-ffc4a482-6043-11e7-8d17-5681efcaa473.png) 
-   Figure 1. Global annually average temperature changes over years. Inserted plot is temperature uncertainty over years.
+  
+  Figure 1. Global annually average temperature changes over years. Inserted plot is temperature uncertainty over years.
    ![figure2](https://user-images.githubusercontent.com/19471954/27813770-268f038a-6046-11e7-86c5-b3f92f0b7be1.png) 
+   
    Figure 2. Global minimum, maximum, and average temperature in each 20-year-interval.
 
 
