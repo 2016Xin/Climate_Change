@@ -16,6 +16,10 @@ The global annually average temperature changing over years was calculated and d
 ### 2. Temperature prediction using prophet time series forecasting package in R
 The data contains monthly series of date column and the respective temperature for each date, which was split into train and test sets. The linear growth model was picked to generate prophet model, within which we can. The predictions exhibit perfect match with the real temperature data in test set with lower root mean square error of 0.32 on training dataset and 0.37 on testing dataset, indicating the model could be used to precisely predict future temperatures. The predicted temperatures of a future time series of 84 months to 2018-12-01 were shown as Figure 5. From the temperature trend in Figure 6, the temperature showed a slight drop in the first decade in 1900s, and then increases and reaches a flat phase during 1950 ~ 1970. The global temperature arises dramatically since 1975. It is reasonable to foresee that the global temperature will keep increasing with high growth rate in the next decade. The measures have to be taken immediately to prevent global warming, otherwise our human will be hoisted by our own petard.
 
+   ![figure5](https://user-images.githubusercontent.com/19471954/27813903-15322c7e-6047-11e7-9cf3-c1dd3072554d.png)
    
+   Figure 5. The plot of actual temperature (grey dots) vs forecasted data (blue line) and forecasted future temperature (red line) in next two years (2017~2018).
+
+
 
 
