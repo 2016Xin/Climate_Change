@@ -7,7 +7,7 @@ ALTER TABLE GlobalLandTemperaturesByCity
 set serde 'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe'
 WITH SERDEPROPERTIES ('field.delim' = ‘,’);
 
-***************************************************************************
+#***************************************************************************
 # create a cleaned table as select from origin table
 # removing missing value and create new columns of year, month…
 
@@ -26,7 +26,7 @@ city, Country, latitude,
 FROM globallandtemperaturesbycity
 WHERE averagetemperature != "";
 
-***************************************************************************
+#***************************************************************************
 — Average Temperature 
 # table temp_avg is the average temperature of North Earth
 # table atemp_avg is the global average temperature
@@ -48,20 +48,20 @@ SELECT year, MAX(avg_t) as max_t, MIN(avg_t) as min_t, AVG(avg_t) as mean_t
 FROM atemp_avg
 WHERE year > 1749
 GROUP BY year;
-————————————Figure 1
-Point plot in R
-yy_avg <- fread("/Users/xchen011/Downloads/global_avgt_annual.csv")
-yy_avg_s <- filter(yy_avg, yy_avg$year >= 1800 )
-ggplot(yy_avg_s, aes(x = yy_avg_s$year, y = yy_avg_s$avg_t)) + geom_point() + geom_smooth() + labs(title = "Global Average Temperature", x = "Year", y = "Average Temperature")
-—————————————
+#————————————Figure 1
+#Point plot in R
+#yy_avg <- fread("/Users/xchen011/Downloads/global_avgt_annual.csv")
+#yy_avg_s <- filter(yy_avg, yy_avg$year >= 1800 )
+#ggplot(yy_avg_s, aes(x = yy_avg_s$year, y = yy_avg_s$avg_t)) + geom_point() + geom_smooth() + labs(title = "Global Average Temperature", x = "Year", y = "Average Temperature")
+#—————————————
 
-— Maximum Minimum Mean temperature of each year
+#— Maximum Minimum Mean temperature of each year
 CREATE TABLE temp_year_min_max AS
   SELECT year, MAX(avg_t) as max_t, MIN(avg_t) as min_t, AVG(avg_t) as mean_t
   FROM temp_avg
   GROUP BY year;
 
-— Group 20 years as a time period, calculate min max and mean temperature of each category
+#— Group 20 years as a time period, calculate min max and mean temperature of each category
 SELECT year, max_t, min_t, mean_t, 
 CASE 
 when t.year BETWEEN 1800 AND 1820 then "1800-1820"
@@ -79,26 +79,26 @@ else "before 1800”
 END AS category
 FROM temp_year_min_max t;
 
-— Add category columns in table of atemp_avg  (LEFT JOIN)
+#— Add category columns in table of atemp_avg  (LEFT JOIN)
 SELECT t1.year, t1.month,t1.avg_t, t1.avg_un, t2.category
 FROM atemp_avg t1
 LEFT JOIN atemp_min_max_ann_cat t2
 ON t1.year = t2.year;
 
-———————————————Figure 2
-box plot in R
-cat_avgt <- fread("/Users/xchen011/Downloads/temp_avg_cat.csv")
-cat_avgt_s <- filter(cat_avgt, cat_avgt$t1.year >= 1800)
-boxplot(cat_avgt_s$t1.avg_t~cat_avgt_s$t2.category) 
-————————————————————
+#———————————————Figure 2
+#box plot in R
+#cat_avgt <- fread("/Users/xchen011/Downloads/temp_avg_cat.csv")
+#cat_avgt_s <- filter(cat_avgt, cat_avgt$t1.year >= 1800)
+#boxplot(cat_avgt_s$t1.avg_t~cat_avgt_s$t2.category) 
+#————————————————————
 
-summarise:
+#summarise:
 SELECT category, MAX(max_t) as maxt, MIN(min_t) as mint, AVG(mean_t) as meant
 FROM category_year_avgt
 GROUP BY category;
 
 
-==========================================
+#==========================================
 
 SELECT country, city, AVG(avgt) as avgt, stddev_pop(avgt) as stdt,  
 CASE 
@@ -142,7 +142,7 @@ END AS color
 FROM atemp_1816_07 t;
 
 
-============================================================= TS table
+#============================================================= TS table
 CREATE TABLE ts_temp_c AS 
 SELECT dt, year, month, 
 CASE 
@@ -164,7 +164,7 @@ else -longitude_num
 end as longitude_num
 FROM ts_temp;
 
-=============================== format datetime as DATE=========
+#=============================== format datetime as DATE=========
 ## the format of date in 90s  is dd/mm/yy
 SELECT cast(dt as date) AS dt, AVG(averagetemperature) as avgt
 FROM globallandtemperaturesbycity
