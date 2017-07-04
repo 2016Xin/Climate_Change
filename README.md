@@ -10,6 +10,7 @@ The global annually average temperature changing over years was calculated and d
   
   Figure 1. Global annually average temperature changes over years. Inserted plot is temperature uncertainty over years.
    ![figure2](https://user-images.githubusercontent.com/19471954/27813770-268f038a-6046-11e7-86c5-b3f92f0b7be1.png) 
+  
   Figure 2. Global minimum, maximum, and average temperature in each 20-year-interval.
 
 
