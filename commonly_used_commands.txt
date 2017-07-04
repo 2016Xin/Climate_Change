@@ -1,0 +1,97 @@
+# command
+
+===================================== Run a java file on Hadoop ==========================
+# Compile WordCount.java and create a jar
+$ javac WordCount.java -cp ${hadoop classpath}  
+# javac WordCount.java -cp $(hadoop classpath) (WP used)
+# $bin/hadoop com.sun.tools.javac.Main WordCount.java
+
+# create a jar
+$ jar cf wc.jar WordCount*.class
+# $ jar cf wc.jar *.class (WP used)
+
+# upload files into the user folder on HDFS
+hdfs dfs -mkdir -p /user/xchen011/data/blogs
+hdfs dfs -put blogs/* /user/xchen011/data/blogs
+# scp xchene@bridges.psc.edu:/home/xchene/BigData/Recommender/ratings.csv /user/xchen011 (error)
+
+# list the files in hdfs fs
+$ hdfs dfs -ls /user/xchen011/ # hdfs dfs -ls /user/xchen011/data/
+
+# read the specific file
+$ hdfs dfs -cat /user/xchen011/data/ratings.csv
+
+# run the application
+$ hadoop  jar wc.jar WordCount mbox.dr-chuck.net.txt output (WP used)
+# $ bin/hadoop jar wc.jar WordCount /user/joe/wordcount/input /user/joe/wordcount/output
+# hadoop jar odroid-xu4-cluster/hadoop/examples/WordCount/wc.jar WordCount /user/michael/data/blogs /user/michael/jobs/wordcount/output-slow
+
+# output
+$ bin/hadoop fs -cat /user/joe/wordcount/output/part-r-00000
+
+================================ Shortcut for Screen =====================================
+# create a screen window
+Ctrl-a + c
+
+# switch between windows
+Ctrl-a + n (for next) Ctrl-a + p (for previous)
+
+# stopping screen
+Ctrl-a + k
+
+# Detaching from screen
+Ctrl-a + d
+
+# reattach to Screen
+screen -r or screen [-d] -r [pid.]tty.host
+
+# To kill a detached session
+screen -list # to identify the detached screen session # screen -x
+screen -r [pid.]tty.host # get attached to the detached screen session
+Ctrl + A then type :quit
+
+# to list all the screen sessions
+Ctrl - a + "
+
+============================== Others Common Used ========================================
+# copy file from one dir to other dir
+cp hive-default.xml.template hive-site.xml
+
+# move
+mv /dir/file.txt /dir2/
+============================ Emacs =======================================================
+C-x C-c # kill emacs
+C-x C-s # save modification
+C-s # search
+============================ hfs dfs command =============================================
+$ hdfs dfs -mkdir -p ~/data
+$ hdfs dfs -ls # check the files in the directory
+# from local computer
+$ scp ~/Downloads/filename.txt xxx@xxx:~/filename
+# from remote computer (ssh) 
+$ hdfs dfs -moveFromLocal localDir ~/data/filename
+
+=========================== In HIVE =====================================================
+# create database
+hive> CREATE DATABASE breastCancerDB;
+OK
+Time taken: 2.762 seconds
+hive> show databases;
+OK
+breastcancerdb
+default
+Time taken: 0.182 seconds, Fetched: 2 row(s)
+hive> USE breastcancerdb;
+
+# create table
+hive> CREATE TABLE pam50_proteins (gene_symbol String, refseqprotein_id String, species String, gene_name String);
+# load data inside the table
+hive> LOAD DATA INPATH '/home/hadoop/data2/PAM50_proteins.csv'
+    > OVERWRITE INTO TABLE pam50_proteins;
+
+# display attributes inside the table
+hive> describe pam50_proteins;
+
+hive> set hive.cli.print.current.db=true;
+hive (breastcancerdb)> 
+
