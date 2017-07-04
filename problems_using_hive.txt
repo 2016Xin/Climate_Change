@@ -1,0 +1,69 @@
+
+hive> CREATE DATABASE breastCancerDB;
+OK
+Time taken: 2.762 seconds
+hive> show databases;
+OK
+breastcancerdb
+default
+Time taken: 0.182 seconds, Fetched: 2 row(s)
+hive> USE breastcancerdb;
+hive> CREATE TABLE pam50_proteins (gene_symbol String, refseqprotein_id String, species String, gene_name String);
+hive> LOAD DATA INPATH '/home/hadoop/data2/PAM50_proteins.csv'
+    > OVERWRITE INTO TABLE pam50_proteins;
+hive> ALTER TABLE pam50_proteins SET SERDEPROPERTIES ('field.delim' = ',');
+hive> SELECT * FROM pam50_proteins LIMIT 5;
+OK
+GeneSymbol	RefSeqProteinID	Species	Gene Name
+MIA	NP_006524	Homo sapiens	melanoma inhibitory activity
+FGFR4	NP_002002	Homo sapiens	fibroblast growth factor receptor 4
+FGFR4	NP_998812	Homo sapiens	fibroblast growth factor receptor 4
+FGFR4	NP_075252	Homo sapiens	fibroblast growth factor receptor 4
+
+------ Problem of getting Null columns ---------------------------------------------------
+# when import 
+
+CREATE TABLE temp 
+  ( 
+     name STRING, 
+     id   INT 
+  ) 
+row format delimited fields terminated BY '\t' lines terminated BY '\n' 
+tblproperties("skip.header.line.count"="1");
+
+https://stackoverflow.com/questions/20813355/skip-first-line-of-csv-while-loading-in-hive-table
+
+===========================R =====================================
+# extract year, month out of date
+https://stackoverflow.com/questions/22603847/how-to-extract-month-from-date-in-r
+
+http://sparkera.ca/2014/12/23/Hive-Get-MAX-MIN-Value-Rows/
+
+# skip the header 
+alter table tempinChina_c set tblproperties("skip.header.line.count"="1");
+
+# set field delimiter 
+ALTER TABLE tempinChina_c SET SERDEPROPERTIES ('field.delim' = ',');
+
+# create a table
+create table tempinChina_c (dt String, Ave_temp INT, unconstaincy INT, Country String);
+
+# load data from hdfs
+load data inpath '/home/hadoop/data_dir/TempInChina_clean' overwrite into table tempinChina_c;
+
+hive (climate)> select * from tempinChina_c limit 10;
+OK
+1820-08-01	16	1	China
+1820-09-01	13	1	China
+1820-10-01	5	1	China
+1820-11-01	-1	1	China
+1820-12-01	-8	1	China
+1821-01-01	-7	1	China
+1821-02-01	-4	2	China
+1821-03-01	1	1	China
+1821-04-01	7	1	China
+1821-05-01	13	1	China
+Time taken: 0.986 seconds, Fetched: 10 row(s)s
+
+# Error while compiling statement: FAILED: ParseException line 1:26 Failed to recognize predicate 'Date'. Failed rule: 'identifier' in column specification
+A: reserved keyword is used as column name≠≠
