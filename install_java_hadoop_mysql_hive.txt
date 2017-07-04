@@ -1,0 +1,132 @@
+# Problems when install Java Hadoop Hive
+
+==================================install java =========================================
+$ java -version
+The problem 'java' can be found in the following packages:
+
+$ sudo apt-add-respository ppa:webupd8team/java
+$ sudo apt-get install oracle-java8-installer
+-----------------problem------------------------
+# Both two commands above return the error message below
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+You might want to run 'apt-get -f install' to correct these:
+The following packages have unmet dependencies:
+ apt-utils : Depends: apt (= 1.2.15) but 1.2.15ubuntu0.2 is to be installed
+ default-jdk : Depends: default-jre (= 2:1.8-56ubuntu2) but it is not going to be installed
+               Depends: default-jdk-headless (= 2:1.8-56ubuntu2) but it is not going to be installed
+               Depends: openjdk-8-jdk but it is not going to be installed
+E: Unmet dependencies. Try 'apt-get -f install' with no packages (or specify a solution).
+----------------- solver ------------------------
+# solved by
+$ sudo apt install -f
+$sudo apt update
+sudo apt dist-upgrade
+
+# reference link 
+https://forum.ubuntu-it.org/viewtopic.php?f=43&t=617459
+
+# difference between apt and apt-get
+https://www.maketecheasier.com/apt-vs-apt-get-ubuntu/
+-------------------------------------------------
+# then correct commands
+sudo apt install oracle-java8-installer
+
+================================= install Hadoop ========================================
+https://www.youtube.com/watch?v=btyyZGYgKJY
+
+# the instruction asks to add a hadoop user
+# problem 1, 
+$ ssh localhost
+$ ssh: connect to host localhost port 22: Connection refused
+
+# solver step 1: desktop sharing, allow remote sharing
+# solver step 2: removing and restart openssh
+$ sudo apt-get remove openssh-client openssh-server
+$ sudo apt-get install openssh-client openssh-server
+# https://ubuntuforums.org/showthread.php?t=1914246
+
+# problem 2: hadoop is not sudoer
+# solver: adduser hadoop sudo from root
+# in user xin (sudoer) run 
+$ sudo -i # don't have to reset password or $ sudo passwd root # then go ahead set password
+xin@xin-NV49C:~$ sudo -i
+[sudo] password for xin: 
+root@xin-NV49C:~# adduser hadoop sudo
+Adding user `hadoop' to group `sudo' ...
+Adding user hadoop to group sudo
+Done.
+root@xin-NV49C:~# logout
+### su -hadoop # switch to hadoop user
+xin@xin-NV49C:~$ su - hadoop
+Password: 
+To run a command as administrator (user "root"), use "sudo <command>".
+See "man sudo_root" for details.
+hadoop@xin-NV49C:~$ hadoop
+
+
+https://ubuntuforums.org/showthread.php?t=1914246
+# install emacs to edit bashrc, gedit and vim didn't work
+# add export path at the end of ~/.bashrc
+$ source ~/.bashrc # return declare statements
+# reason: there is syntax error in bashrc file. replace all the whitespace with space again. 
+syntax: export variable=value
+https://superuser.com/questions/11015/what-is-causing-all-these-declare-x-lines-when-i-open-a-terminal
+
+
+$ cd Downloads/
+$ tar -xzf mysql-connector-java-5.1.32.tar.gz
+$ cd mysql-connector-java-5.1.32/
+$ sudo cp mysql-connector-java-5.1.32-bin.jar $HIVE_HOME/lib/
+then works!
+
+first time run $ start-dfs.sh
+Incorrect configuration: namenode address dfs.namenode.servicerpc-address or dfs.namenode.rpc-address is not configured.
+
+reason: core-site.xml was't configured, datanode and namenode didn't run in the end
+
+go configure
+
+XML document structures must start and end within the same entity.
+17/06/18 09:58:58 FATAL conf.Configuration: error parsing conf core-site.xml
+org.xml.sax.SAXParseException; systemId: file:/home/hadoop/hadoop/etc/hadoop/core-site.xml; lineNumber: 39; columnNumber: 1; XML document structures must start and end within the same entity.
+
+reason: the tags in xml should be in pairs. 
+
+================= install mysql ==========================
+$ sudo apt mysql-server
+# put pswd and user name
+# start mysql server 
+$ mysql -u root -p
+Password:
+-----------------------------------------------------------
+
+================== install hive ==========================
+https://www.youtube.com/watch?v=WIS_nby4bLE
+
+Before you can run the Hive metastore with a remote MySQL database, you must configure a connector to the remote MySQL database, set up the initial database schema, and configure the MySQL user account for the Hive user.
+
+# problem when configuring HIVE local metastore through mysql database: 
+Caused by: org.datanucleus.exceptions.NucleusException: Attempt to invoke the "BONECP" plugin to create a ConnectionPool gave an error : The specified datastore driver ("com.mysql.jdbc.Driver") was not found in the CLASSPATH. Please check your CLASSPATH specification, and the name of the driver.
+
+# if the JDBC driver JAR file for mysql (connector/J) is not on HIVE's classpath ($HIVE_HOME/Lib), we will get this error. 
+http://hadooptutorial.info/datastore-driver-was-not-found/
+
+
+
+==============================================
+ # cut from hadoop/etc/hadoop/core-site.xml
+
+ Vimal Kumar Srivastava
+Page 5
+Edit Configuration Files
+Hadoop has many of configuration files, which need to configure 
+as per requirements of your hadoop infrastructure. Lets start with 
+the configuration with basic hadoop
+single node cluster setup. first 
+navigate to below location.
+Edit hadoop/etc/hadoop/core-site.xml:
+<configuration>
+
+
